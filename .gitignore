@@ -1,0 +1,50 @@
+# .NET Core build folders
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+
+# Rider
+.idea/
+
+# Environment files
+.env
+appsettings.Development.json
+appsettings.Production.json
+
+# Logs
+logs/
+*.log
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.swp
+*.*~
+project.lock.json
+.project
+.settings
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn 
