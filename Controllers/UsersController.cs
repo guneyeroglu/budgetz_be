@@ -21,12 +21,12 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<ApiResponse<UserResponse>>> Register([FromBody] RegisterDto request)
+    public async Task<ActionResult<ApiResponse<UserRegisterResponse>>> Register([FromBody] RegisterDto request)
     {
         // Username boş kontrolü
         if (string.IsNullOrEmpty(request.Username))
         {
-            return BadRequest(new ApiResponse<UserResponse>
+            return BadRequest(new ApiResponse<UserRegisterResponse>
             {
                 Success = false,
                 Message = "Kullanıcı adı boş olamaz.",
@@ -37,7 +37,7 @@ public class UsersController : ControllerBase
         // Username uzunluk kontrolü
         if (request.Username.Length < 3 || request.Username.Length > 20)
         {
-            return BadRequest(new ApiResponse<UserResponse>
+            return BadRequest(new ApiResponse<UserRegisterResponse>
             {
                 Success = false,
                 Message = "Kullanıcı adı 3 ile 20 karakter arasında olmalıdır.",
@@ -48,7 +48,7 @@ public class UsersController : ControllerBase
         // Password boş kontrolü
         if (string.IsNullOrEmpty(request.Password))
         {
-            return BadRequest(new ApiResponse<UserResponse>
+            return BadRequest(new ApiResponse<UserRegisterResponse>
             {
                 Success = false,
                 Message = "Şifre boş olamaz.",
@@ -59,7 +59,7 @@ public class UsersController : ControllerBase
         // Password uzunluk kontrolü
         if (request.Password.Length < 8 || request.Password.Length > 16)
         {
-            return BadRequest(new ApiResponse<UserResponse>
+            return BadRequest(new ApiResponse<UserRegisterResponse>
             {
                 Success = false,
                 Message = "Şifre 8 ile 16 karakter arasında olmalıdır.",
@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
 
         if (existingUser != null)
         {
-            return BadRequest(new ApiResponse<UserResponse>
+            return BadRequest(new ApiResponse<UserRegisterResponse>
             {
                 Success = false,
                 Message = "Bu kullanıcı adı zaten kullanımda.",
@@ -93,14 +93,14 @@ public class UsersController : ControllerBase
         await _context.SaveChangesAsync();
 
         // Response oluştur
-        var response = new UserResponse
+        var response = new UserRegisterResponse
         {
             Id = user.Id,
             Username = user.Username,
             IsAdmin = user.IsAdmin
         };
 
-        return StatusCode(StatusCodes.Status201Created, new ApiResponse<UserResponse>
+        return StatusCode(StatusCodes.Status201Created, new ApiResponse<UserRegisterResponse>
         {
             Success = true,
             Message = "Kullanıcı başarıyla oluşturuldu.",
@@ -109,12 +109,12 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<ApiResponse<LoginResponse>>> Login([FromBody] LoginDto request)
+    public async Task<ActionResult<ApiResponse<UserLoginResponse>>> Login([FromBody] LoginDto request)
     {
         // Username boş kontrolü
         if (string.IsNullOrEmpty(request.Username))
         {
-            return BadRequest(new ApiResponse<LoginResponse>
+            return BadRequest(new ApiResponse<UserLoginResponse>
             {
                 Success = false,
                 Message = "Kullanıcı adı boş olamaz.",
@@ -125,7 +125,7 @@ public class UsersController : ControllerBase
         // Password boş kontrolü
         if (string.IsNullOrEmpty(request.Password))
         {
-            return BadRequest(new ApiResponse<LoginResponse>
+            return BadRequest(new ApiResponse<UserLoginResponse>
             {
                 Success = false,
                 Message = "Şifre boş olamaz.",
@@ -139,7 +139,7 @@ public class UsersController : ControllerBase
 
         if (user == null)
         {
-            return BadRequest(new ApiResponse<LoginResponse>
+            return BadRequest(new ApiResponse<UserLoginResponse>
             {
                 Success = false,
                 Message = "Bu kullanıcı adı sistemde bulunamadı.",
@@ -150,7 +150,7 @@ public class UsersController : ControllerBase
         // Şifre kontrolü
         if (user.Password != request.Password)
         {
-            return BadRequest(new ApiResponse<LoginResponse>
+            return BadRequest(new ApiResponse<UserLoginResponse>
             {
                 Success = false,
                 Message = "Şifre hatalı.",
@@ -162,18 +162,15 @@ public class UsersController : ControllerBase
         var token = _tokenService.CreateToken(user);
 
         // Response oluştur
-        var response = new LoginResponse
+        var response = new UserLoginResponse
         {
-            User = new UserResponse
-            {
-                Id = user.Id,
-                Username = user.Username,
-                IsAdmin = user.IsAdmin
-            },
+            Id = user.Id,
+            Username = user.Username,
+            IsAdmin = user.IsAdmin,
             Token = token
         };
 
-        return Ok(new ApiResponse<LoginResponse>
+        return Ok(new ApiResponse<UserLoginResponse>
         {
             Success = true,
             Message = "Giriş başarılı.",

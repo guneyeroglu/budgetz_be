@@ -1,7 +1,7 @@
 namespace BudgetZ.API.Models.Response;
 
-// Kullanıcı bilgilerini döndürmek için kullanılan response modeli
-public class UserResponse
+// Kullanıcı kaydı yanıtı için response modeli
+public class UserRegisterResponse
 {
     // Kullanıcının benzersiz tanımlayıcısı
     public Guid Id { get; set; }
@@ -9,4 +9,11 @@ public class UserResponse
     public string Username { get; set; } = string.Empty;
     // Kullanıcının admin olup olmadığı
     public bool IsAdmin { get; set; }
+}
+
+// Kullanıcı girişi sonrası döndürülecek response modeli
+public class UserLoginResponse : UserRegisterResponse
+{
+    // JWT token
+    public string Token { get; set; } = string.Empty;
 } 
